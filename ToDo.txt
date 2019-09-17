@@ -1,0 +1,11 @@
+Paste the following info to \\makfsp5VS\AutomationQC\Team\Admin\RND Workshop\JSInItsTruestForm
+:
+	- AttendanceTracker Application
+	- Workshop Notes
+	- Git installer
+
+Delete records in database's MAKV0170
+
+Dont forget to:
+	- Purchase McDo for brekky
+	- Record the meeting

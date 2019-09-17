@@ -1,0 +1,139 @@
+
+RND Workshop Notes - JavaScript In Its Truest Form
+
+
+The Playgrounds
+	1. JSFiddle
+		https://stackoverflow.com/questions/8413523/jquery-array-push-not-working
+	2. CodePen
+		https://stackoverflow.com/questions/44231344/datatables-jquery-event-works-on-second-page-not-on-rest
+
+
+1.
+	<!-- Select2 -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">`
+
+	<!-- Select2 -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.min.js"></script>
+
+2. 
+
+	<!-- bootstrap datepicker -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+	<!-- bootstrap datepicker -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+	 
+3.
+	<!-- DataTables -->
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+
+	<!-- DataTables -->
+	<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.bootstrap.min.js"></script>
+
+	  $('<insertTableSelectorHere>').DataTable({
+	    'processing': false,
+	    'serverSide': true,
+	    'ajax': '<data api url here>',
+	    'paging'      : true,
+	    'lengthChange': false,
+	    'autoWidth'   : false,
+	    'columns': [
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['<desiredColumnHere>'];
+	            }
+	        },
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['<desiredColumnHere>'];
+	            }
+	        },
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['<desiredColumnHere>'];
+	            }
+	        },
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['<desiredColumnHere>'];
+	            }
+	        }
+	        ]
+	})
+
+4. 
+	<!-- Toastr -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+	<!-- Toastr -->
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
+
+	  toastr.success(
+	      'Your success message goes here',
+	      'Attendance Tracker',
+	      {
+	          timeOut: 4000,
+	          fadeOut: 4000
+	      });
+
+	    toastr.error(
+	      'Module or app name goes here',
+	      'Attendance Tracker',
+	      {
+	          timeOut: 4000,
+	          fadeOut: 4000
+	      });
+
+
+5. Pre-made for WFHTab
+
+   $("div#wfh_tab").submit(function (event) {
+        event.preventDefault();
+        var employeeName = $('#wfh-employeeName').val(),
+            wfhDate = $('#wfh-date').val(),
+            hours = $('#wfh-hours').val(),
+            time = $('#wfh-time').val(),
+            reason = $('#wfh-reason').val(),
+            type = "Work From Home";
+        var parameters = { 
+                employeeName: employeeName,
+                type: type,
+                date: wfhDate,
+                hours: hours,
+                time: time,
+                reason: reason
+            };
+        $.ajax({
+            url: "http://makv0170:52433/Home/RecordCreate/",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json;",
+            cache: false,
+            data: JSON.stringify(parameters),
+            success: function (data) {
+              toastr.success(
+                  'Successfully added record',
+                  'Attendance Tracker',
+                  {
+                      timeOut: 4000,
+                      fadeOut: 4000
+                  });
+              $('#attendanceTracker').DataTable().ajax.reload();
+            },
+            error: function (jqXHR) {
+              toastr.error(
+                  'An error occurred',
+                  'Attendance Tracker',
+                  {
+                      timeOut: 4000,
+                      fadeOut: 4000
+                  });
+            }
+        });
+    });
