@@ -8,6 +8,11 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
   <!-- Ionicons -->
@@ -893,7 +898,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-<!-- FastClick -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.bootstrap.min.js"></script>
+  <script src="http://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.0.2/js/toastr.min.js"></script>
+  <!-- FastClick -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.4.18/js/adminlte.min.js"></script>
@@ -902,8 +912,92 @@
 <script>
   $(function () {
 
-  
+    $('.select2').select2();
     
+    $('.datepicker').datepicker({
+      autoclose: true
+    });
+
+    $('#attendanceTracker').DataTable({
+	    'processing': false,
+	    'serverSide': true,
+	    'ajax': 'http://makv0170:52433/Home/GetAll',
+	    'paging'      : true,
+	    'lengthChange': false,
+	    'autoWidth'   : false,
+      'searching' : false,
+      'ordering': false,
+	    'columns': [
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['employeeName'];
+	            }
+	        },
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['type'];
+	            }
+	        },
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['date'];
+	            }
+	        },
+	        {
+	            'data': null,
+	            'render': function (data, type, full, meta) {
+	                return full['time'];
+	            }
+	        }
+	        ]
+	})
+
+
+  $("div#leave_tab").submit(function (event) {
+        event.preventDefault();
+        var employeeName = $('#leave-employeeName').val(),
+            leaveDate = $('#leave-leaveDate').val(),
+            hours = $('#leave-hours').val(),
+            reason = $('#leave-reason').val(),
+            type = "Leave";
+        var parameters = { 
+                employeeName: employeeName,
+                type: type,
+                date: leaveDate,
+                hours: hours,
+                reason: reason
+            };
+        $.ajax({
+            url: "http://makv0170:52433/Home/RecordCreate/",
+            dataType: "json",
+            type: "POST",
+            contentType: "application/json;",
+            cache: false,
+            data: JSON.stringify(parameters),
+            success: function (data) {
+              toastr.success(
+                  'Successfully added record',
+                  'Attendance Tracker',
+                  {
+                      timeOut: 4000,
+                      fadeOut: 4000
+                  });
+              $('#attendanceTracker').DataTable().ajax.reload();
+            },
+            error: function (jqXHR) {
+                toastr.error(
+                  'An error occurred',
+                  'Attendance Tracker',
+                  {
+                      timeOut: 4000,
+                      fadeOut: 4000
+                  });
+            }
+        });
+    });
   })
 </script>
 
